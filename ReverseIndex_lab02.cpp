@@ -41,7 +41,7 @@ void Reverse(int a[], int i, int j)
 {
     if (i < j)
     {
-        swap(a[i - 1], a[j - 1]);
+        swap(a[i], a[j]);
         Reverse(a, i + 1, j - 1);
     }
 }
