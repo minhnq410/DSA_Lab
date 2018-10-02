@@ -42,6 +42,7 @@ public:
             int i = size;
             *(a+i) = n;
             size += 1;
+            return size;
         }
     }
 
@@ -115,6 +116,8 @@ int main(void)
    a->addLast(5);
    a->print();
    a->removeData(2);
+   a->print();
+   a->removeIndex(1);
    a->print();
    return 0;
 }

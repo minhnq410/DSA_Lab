@@ -48,41 +48,43 @@ public:
         {
             SNode* temp = head;
             head = head->next;
-            temp = new SNode(NULL, NULL);
+            string* s = temp->element;
             delete temp;
             size--;
+            return s;
         }
     }
 
     // insert a new node after node n and store the string s there
-    void insertAfter (SNode n, string* s) {
-        SNode* newNode = new SNode(s, n.next);
-        n.next = newNode;
+    void insertAfter (SNode * n, string* s) {
+        SNode* newNode = new SNode(s, n->next);
+        n->next = newNode;
         size++;
     }
 
     // delete node n and return the string stored in n
-    string* insertAfter (SNode n) {
-        if (head == &n)
+    string* deleteAfter (SNode * n) {
+        if (head == n)
         {
             SNode* temp = head;
             head = head->next;
-            temp->next = NULL;
+            string* s = temp->element;
+            delete temp;
             size--;
-            return temp->getElement();
+            return s;
         }
         else
         {
             SNode* temp = head;
-            while (head->next != &n)
+            while (temp->next != n)
             {
-                head = head->next;
+                temp = temp->next;
             }
-            head->next = n.next;
-            head = temp;
-            n.next = NULL;
+            temp->next = n->next;
+            string* s = temp->element;
+            delete temp;
             size--;
-            return n.getElement();
+            return s;
         }
     }
 
@@ -106,6 +108,11 @@ int main(void)
    SList* dl = new SList();
    string s1 = "1";
    SNode* p = dl->addFirst(&s1);
+   dl->print();
+   string s1_2 = "1.5";
+   dl->insertAfter(p,&s1_2);
+   dl->print();
+   dl->deleteAfter(p);
    dl->print();
 
    string s2 = "2";
