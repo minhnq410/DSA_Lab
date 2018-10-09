@@ -4,12 +4,12 @@
 using namespace std;
 
 /* Node of a singly linked list of strings */
-struct SNode {
+struct DNode {
    string* element;
-   SNode *next; // Pointer to the next node
-   SNode *prev; // Pointer to the previous node
+   DNode *next; // Pointer to the next node
+   DNode *prev; // Pointer to the previous node
    /* Creates a node. */
-   SNode(string* e, SNode* n, SNode* p)  {
+   DNode(string* e, DNode* n, DNode* p)  {
       element = e;
       next = n;
       prev = p;
@@ -20,15 +20,15 @@ struct SNode {
 
 class DList {
 protected:		// data member
-    SNode* head;
-    SNode* trailer;
+    DNode* head;
+    DNode* tail;
     long size;		// number of nodes in the list
 
 public:
     /* Default constructor that creates an empty list */
     DList() {
-        head = trailer;
-        trailer = NULL;
+        head = NULL;
+        tail = NULL;
         size = 0;
     }
     // ... update and search methods would go here ...
@@ -36,84 +36,92 @@ public:
     int isEmpty() { return size<=0; }
 
     // add a new node to the beginning of the list
-    SNode* addFirst(string* s) {
-        SNode* newNode = new SNode(s, head, NULL);
-        head = newNode;
-        size++;
-        return newNode;
+    DNode* addFirst(string* s) {
+        if (this->isEmpty())
+        {
+            DNode* newNode = new DNode(s, NULL, NULL);
+            head = newNode;
+            tail = newNode;
+            size++;
+            return newNode;
+        }
+        else
+        {
+            DNode* newNode = new DNode(s, head, NULL);
+            head = newNode;
+            size++;
+            return newNode;
+        }
     }
 
-    SNode* addLast(string* s) {
-        SNode* newNode = new SNode(s, NULL, trailer);
-        trailer = newNode;
-        size++;
-        return newNode;
-    }
     //remove the first node in the list
     string* removeFirst() {
         if (head==NULL) return NULL;
         //  code to remove the first node in the list
         else
         {
-            SNode* temp = head;
-            head = head->next;
-            head->prev = NULL;
-            temp = new SNode(NULL, NULL, NULL);
+            DNode* temp = head;
+            if (size == 1)
+            {
+                head = NULL;
+                tail = NULL;
+            }
+            else
+            {
+                head = head->next;
+                head->prev = NULL;
+            }
+            temp = new DNode(NULL, NULL, NULL);
             delete temp;
             size--;
         }
     }
 
     // insert a new node after node n and store the string s there
-    void insertAfter (SNode n, string* s) {
-        SNode* newNode = new SNode(s, n.next, &n);
-        (n.next)->prev = newNode;
-        n.next = newNode;
+    void insertAfter (DNode* n, string* s) {
+        DNode* newNode = new DNode(s, n->next, n);
+        if (n == tail)
+        {
+            tail = newNode;
+        }
+        else
+        {
+            (n->next)->prev = newNode;
+        }
+        n->next = newNode;
         size++;
     }
 
     // delete node n and return the string stored in n
-    string* insertAfter (SNode n) {
-        if (head == &n)
+    string* deleteAfter (DNode* n) {
+        if (n == tail)
         {
-            SNode* temp = head;
-            head = head->next;
-            head->prev = NULL;
-            temp->next = NULL;
-            size--;
-            return temp->getElement();
-        }
-        else if (trailer == &n)
-        {
-            SNode* temp = trailer;
-            trailer = trailer->prev;
-            trailer->next = NULL;
-            temp->prev = NULL;
-            size--;
-            return temp->getElement();
+            tail = n->prev;
         }
         else
         {
-            SNode* temp = head;
-            while (head->next != &n)
-            {
-                head = head->next;
-            }
-            head->next = n.next;
-            (n.next)->prev = head;
-            head = temp;
-            n.next = NULL;
-            n.prev = NULL;
-            size--;
-            return n.getElement();
+            (n->next)->prev = n->prev;
         }
+        if (n == head)
+        {
+            head = n->next;
+        }
+        else
+        {
+            (n->prev)->next = n->next;
+        }
+        n->next = NULL;
+        n->prev = NULL;
+        string* s = n->element;
+        delete n;
+        return s;
     }
 
     //display the list's data in order from head to tail
     void print() {
-        SNode* iter = head;
+        DNode* iter = head;
         while (iter!=NULL) {
-            // call SNode method to display iter's data
+            // call DNode method to display iter's data
             //.....
             cout << *(iter->getElement());
             iter = iter->next;
@@ -125,10 +133,15 @@ public:
 int main(void)
 {
    // You should modified this function to test list's methods.
-    /*
-   SList* dl = new SList();
+
+   DList* dl = new DList();
    string s1 = "1";
-   SNode* p = dl->addFirst(&s1);
+   DNode* p = dl->addFirst(&s1);
+   dl->print();
+    string s1_2 = "1.5";
+   dl->insertAfter(p,&s1_2);
+   dl->print();
+   dl->deleteAfter(p);
    dl->print();
 
    string s2 = "2";
@@ -153,7 +166,7 @@ int main(void)
    dl->print();
    dl->removeFirst();
    dl->print();
-    */
+
    return 0;
 }
 
