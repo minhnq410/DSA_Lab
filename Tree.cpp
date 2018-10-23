@@ -131,8 +131,9 @@ class BinaryTree {
             cout << *(n->value) << " ";
         }
 
-};
 
+};
+int Calculate(BinaryTree* t);
 int main()
 {
     //string s;
@@ -160,7 +161,9 @@ int main()
     n1->setLeft(n2);
     n1->setRight(n3);
     BinaryTree* tree = new BinaryTree(n4);
-    tree->inorderPrint(tree->getRoot());
+    //tree->inorderPrint(tree->getRoot());
+    cout << endl;
+    tree->postorderPrint(tree->getRoot());
 
     return 0;
 }
@@ -170,3 +173,5 @@ bool isOperator(char c)
 {
     return (c == '+' || c == '-' || c == '*' || c == '/');
 }
+
+int Calculate()
