@@ -3,14 +3,12 @@
 
 using namespace std;
 
-bool isOperator(char c);
-
 struct Node {
-    char* value;
+    int* value;
     Node* LeftChild;
     Node* RightChild;
 
-    Node(char* value)
+    Node(int* value)
     {
         this->value = value;
         LeftChild = NULL;
@@ -19,7 +17,7 @@ struct Node {
 
     int getValue()
     {
-        return *value - '0';
+        return *value;
     }
 
     void setLeft(Node* n)
@@ -43,13 +41,22 @@ struct Node {
         {
             (this->LeftChild)->inorderPrint();
         }
-        cout << *value << " ";
+        if( this->isInternal())
+        {
+            switch (this->getValue())
+            {
+                case 1: cout << "+ "; break;
+                case 2: cout << "- "; break;
+                case 3: cout << "* "; break;
+                case 4: cout << "/ "; break;
+            }
+        }
+        else cout << *value << " ";
         if( this->RightChild != NULL)
         {
             (this->RightChild)->inorderPrint();
         }
     }
-
     void postorderPrint()
     {
         if (this->LeftChild != NULL)
@@ -60,7 +67,17 @@ struct Node {
         {
             this->RightChild->postorderPrint();
         }
-        cout << *value << " ";
+        if( this->isInternal())
+        {
+            switch (this->getValue())
+            {
+                case 1: cout << "+ "; break;
+                case 2: cout << "- "; break;
+                case 3: cout << "* "; break;
+                case 4: cout << "/ "; break;
+            }
+        }
+        else cout << *value << " ";
     }
 
     double evaluate()
@@ -73,51 +90,33 @@ struct Node {
         {
             double x = (this->LeftChild)->evaluate();
             double y = (this->RightChild)->evaluate();
-            char c = *value;
-            if (c == '+') return x + y;
-            if (c == '-') return x - y;
-            if (c == '*') return x * y;
-            if (c == '/') return x / y;
+            int c = *value;
+            if (c == 1) return x + y;
+            if (c == 2) return x - y;
+            if (c == 3) return x * y;
+            if (c == 4) return x / y;
         }
     }
 
 };
 
-class BinaryTree {
-
-    private:
-        Node* root;
-
-    public:
-        BinaryTree(Node* root)
-        {
-            this->root = root;
-
-        }
-
-        Node* getRoot()
-        {
-            return root;
-        }
-
-};
 int main()
 {
-    char c1 = '*';
-    char c2 = '3';
-    char c3 = '4';
-    char c4 = '+';
-    char c5 = '/';
-    char c6 = '5';
-    char c7 = '2';
+    int c1 = 3; // dau *
+    int c2 = 3;
+    int c3 = 4;
+    int c4 = 1;  // dau +
+    int c5 = 4;  // dau /
+    int c6 = 10;
+    int c7 = 2;
 
-    char* v1 = &c1;
-    char* v2 = &c2;
-    char* v3 = &c3;
-    char* v4 = &c4;
-    char* v5 = &c5;
-    char* v6 = &c6;
-    char* v7 = &c7;
+    int* v1 = &c1;
+    int* v2 = &c2;
+    int* v3 = &c3;
+    int* v4 = &c4;
+    int* v5 = &c5;
+    int* v6 = &c6;
+    int* v7 = &c7;
 
     Node* n1 = new Node(v1);
     Node* n2 = new Node(v2);
@@ -135,7 +134,7 @@ int main()
     n5->setRight(n7);
 
     n4->inorderPrint();
-    cout << " = ";
+    cout << "= ";
     cout << n4->evaluate();
     return 0;
 }
