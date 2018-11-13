@@ -2,15 +2,19 @@
 #include <fstream>
 #include <vector>
 #include <algorithm>
+#include <map>
 
 using namespace std;
 
-bool smaller (string a, string b)
-{
-    a[0] = tolower(a[0]);
-    b[0] = tolower(b[0]);
-    return a < b;
-}
+struct compare{
+    bool operator()(string a, string b)
+    {
+        transform(a.begin(), a.end(), a.begin(), ::tolower);
+        transform(b.begin(), b.end(), b.begin(), ::tolower);
+        return a < b;
+    }
+};
+
 
 int main()
 {
@@ -24,23 +28,16 @@ int main()
     }
     fileIn.close();
 
-    sort(words.begin() , words.end() , smaller);
-    vector<int> occurences;
+    map<string, int> ::iterator i;
+    map<string, int, compare > myMap;
     for (int i = 0; i < words.size(); i++)
     {
-        occurences.push_back(1);
-        if (i + 1 == words.size()) break;
-        if (words[i] == words[i + 1])
-        {
-            occurences[i]++;
-            words.erase(words.begin() + i + 1);
-            i--;
-        }
+        string w = words[i];
+        myMap[w]++;
     }
-    for (int i = 0; i < words.size(); i++)
+    for (i = myMap.begin(); i != myMap.end(); i++)
     {
-        cout << words[i] << "\t" << occurences[i] << endl;
+        cout << i->first << "\t" << i->second << endl;
     }
-
     return 0;
 }
